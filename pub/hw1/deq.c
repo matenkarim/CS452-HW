@@ -5,9 +5,9 @@
 #include "deq.h"
 #include "error.h"
 
-#if defined(_WIN32) || defined(_WIN64)
-extern int asprintf(char **strp, const char *fmt, ...);
-#endif
+// #if defined(_WIN32) || defined(_WIN64)
+// extern int asprintf(char **strp, const char *fmt, ...);
+// #endif
 
 // indices and size of array of node pointers
 typedef enum {Head,Tail,Ends} End;
@@ -65,7 +65,7 @@ static void put(Rep r, End e, Data d) {
 
 static Data ith(Rep r, End e, int i)  { 
   if (!r) return 0;
-  if (i < 0 || i >= r->len) return 0;
+  if (i < 0 || i >= r->len) ERROR("Index out of bounds!");
 
   Node n = (e == Head) ? r->ht[Head] : r->ht[Tail];
   while (i > 0) {
