@@ -1,13 +1,27 @@
+/**
+ * @file deq.c
+ * @brief Implementation of a double-ended queue (deque).
+ *
+ * This file implements a double-ended queue (deque) using a doubly linked list. 
+ * It provides efficient insertion, deletion, and traversal operations at both ends.
+ *
+ * Features include:
+ * - Insertion and deletion at both head and tail.
+ * - Accessing and removing elements by index or value.
+ * - Iteration and string representation support.
+ *
+ * @author Jim Buffenbarger
+ * @author Maten Karim
+ * @date 27 Jan 2025
+ */
+
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "deq.h"
 #include "error.h"
-
-// #if defined(_WIN32) || defined(_WIN64)
-// extern int asprintf(char **strp, const char *fmt, ...);
-// #endif
 
 // indices and size of array of node pointers
 typedef enum {Head,Tail,Ends} End;
@@ -27,6 +41,20 @@ static Rep rep(Deq q) {
   return (Rep)q;
 }
 
+/**
+ * @brief Inserts a new node with the given data at the specified end of the deque.
+ *
+ * This function creates a new node with the provided data and inserts it either
+ * at the head or the tail of the deque, depending on the specified end. If the
+ * deque is empty, the new node becomes both the head and the tail.
+ *
+ * @param r Pointer to the deque representation.
+ * @param e The end where the new node should be inserted (Head or Tail).
+ * @param d The data to be stored in the new node.
+ *
+ * @note If the deque representation pointer is NULL, the function returns immediately.
+ * @note If memory allocation for the new node fails, an error is reported.
+ */
 static void put(Rep r, End e, Data d) {
   // Sanity check
   if (!r) return; // Should be caught by rep(q) but just in case
@@ -63,19 +91,49 @@ static void put(Rep r, End e, Data d) {
   r->len++;
 }
 
+/**
+ * ith - Retrieve the data at the i-th position from the specified end of the deque.
+ * 
+ * @param r: The representation of the deque.
+ * @param e: The end from which to start (Head or Tail).
+ * @param i: The index of the element to retrieve.
+ * 
+ * @return The data at the i-th position, or 0 if the deque is empty or the index is out of bounds.
+ * 
+ * This function traverses the deque starting from the specified end (Head or Tail) and moves
+ * towards the other end until it reaches the i-th position. If the index is out of bounds,
+ * an error is raised.
+ */
 static Data ith(Rep r, End e, int i)  { 
+  // Ensure the deque representation is valid
   if (!r) return 0;
+
+  // Check if the index is within bounds
   if (i < 0 || i >= r->len) ERROR("Index out of bounds!");
 
+  // Start traversal from the specified end (Head or Tail)
   Node n = (e == Head) ? r->ht[Head] : r->ht[Tail];
+
+  // Traverse the deque to the i-th position
   while (i > 0) {
     n = (e == Head) ? n->np[Tail] : n->np[Head];
     i--;
   }
-  return (n ? n->data : 0);
 
+  // Return the data at the i-th position, or 0 if the node is null
+  return (n ? n->data : 0);
 }
 
+/**
+ * @brief Retrieves and removes an element from the specified end of the deque.
+ *
+ * This function removes an element from either the head or the tail of the deque,
+ * depending on the specified end, and returns the data stored in that element.
+ *
+ * @param r A pointer to the deque representation (Rep) structure.
+ * @param e An enum value indicating which end to remove the element from (Head or Tail).
+ * @return The data stored in the removed element, or 0 if the deque is empty or the representation is invalid.
+ */
 static Data get(Rep r, End e)         { 
   if (!r || r->len ==0) {
     // empty queue or invalid rep
@@ -106,6 +164,21 @@ static Data get(Rep r, End e)         {
   return d;
 
 }
+
+/**
+ * @brief Removes a node with the specified data from the deque.
+ *
+ * This function searches for a node containing the specified data in the deque
+ * and removes it. The search starts from the end specified by the parameter `e`.
+ * If the node is found and removed, the function returns the data of the removed node.
+ * If the node is not found, the function returns 0.
+ *
+ * @param r A pointer to the deque representation.
+ * @param e The end from which to start the search (Head or Tail).
+ * @param d The data to search for and remove.
+ * @return The data of the removed node if found, otherwise 0.
+ */
+
 static Data rem(Rep r, End e, Data d) { 
   if (!r || r->len == 0) return 0;
 
