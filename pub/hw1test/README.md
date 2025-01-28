@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# cs452-hw1
-=======
 # CS 452 - 002 | HW1 
 # Maten Karim
 ## Project Specification
@@ -19,4 +16,3 @@ blah blah blah
 
 
 ***Add specific code snippets on how to run the code, limitations by running on windows (we didn't use mac so we don't know), and try to add videos of demonstration.
->>>>>>> 74d275d (Initial commit)
