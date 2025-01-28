@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# cs452-hw1
-=======
 # CS 452 - 002 | HW1 
 # Maten Karim
 ## Project Specification
@@ -104,4 +101,3 @@ Here is a link to a YouTube video, that demonstrates everything I have written a
 
 
 
->>>>>>> 74d275d (Initial commit)
